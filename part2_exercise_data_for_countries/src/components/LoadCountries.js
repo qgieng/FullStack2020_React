@@ -1,12 +1,29 @@
-import React from 'react'
+import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 
+const LoadWeather = ({country})=>{
+  const weather_base_url = 'http://api.weatherstack.com/current'
+  const api_key = process.env.REACT_APP_API_KEY;
+  const full_api_link = `${weather_base_url}?access_key=${api_key}&query=${country.name}`
+  console.log(full_api_link);
+  const weather_data = getWeatherData(full_api_link);
+  return(<div>
+
+  </div>)
+}
 
 
+const getWeatherData= (link)=>{
+  axios.get(link)
+    .then((request)=>{
+      console.log(request.data);
+    })
+}
 const LoadCountryInfo= ({country})=>{
-    const weather_base_url = 'http://api.weatherstack.com/'
-    const api_key = process.env.REACT_APP_API_KEY;
+    
+
     return(
       <div>
         <li>
@@ -24,6 +41,7 @@ const LoadCountryInfo= ({country})=>{
         </ul>
   
         <img src={country.flag} alt={country.name} border='5px solid #555'/>
+        <LoadWeather country={country}/>
         </li>
       </div>
     );
