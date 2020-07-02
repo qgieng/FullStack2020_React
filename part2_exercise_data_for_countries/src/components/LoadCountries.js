@@ -1,25 +1,42 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 
 const LoadWeather = ({country})=>{
+  const [weatherData, setWeather] = useState('');
   const weather_base_url = 'http://api.weatherstack.com/current'
   const api_key = process.env.REACT_APP_API_KEY;
-  const full_api_link = `${weather_base_url}?access_key=${api_key}&query=${country.name}`
-  console.log(full_api_link);
-  const weather_data = getWeatherData(full_api_link);
-  return(<div>
+  const full_api_link = `${weather_base_url}?access_key=${api_key}&query=${country.capital}`
 
-  </div>)
-}
-
-
-const getWeatherData= (link)=>{
-  axios.get(link)
+  const hook = ()=>{
+    axios.get(full_api_link)
     .then((request)=>{
-      console.log(request.data);
-    })
+      setWeather(request.data);
+    }).catch(error=>{console.log(error)})
+  }
+  useEffect(hook,[]);
+  if(weatherData !== '' && weatherData !== undefined && weatherData !== null)
+    return(
+      <div>
+          <h1>Weather in {country.capital}</h1>
+          <LoadWeatherData weatherData = {weatherData}/>
+      </div>
+    )
+  else 
+      return(<></>)
+};
+
+const LoadWeatherData= ({weatherData})=>{
+    console.log('weatherData', weatherData)
+    return(
+      <div>
+        <p><b>temperature {weatherData.current.temperature}</b></p>
+        <img src={weatherData.current.weather_icons[0]} alt={weatherData.current.weather_descriptions}/> 
+        <p><b>wind: {weatherData.current.wind_speed} mph direction {weatherData.current.wind_dir}</b></p>
+      </div>
+    )
+
 }
 const LoadCountryInfo= ({country})=>{
     
@@ -40,7 +57,7 @@ const LoadCountryInfo= ({country})=>{
           })}
         </ul>
   
-        <img src={country.flag} alt={country.name} border='5px solid #555'/>
+        <img src={country.flag} alt={country.name} border='5px solid #555' height='500px' width='500px'/>
         <LoadWeather country={country}/>
         </li>
       </div>
