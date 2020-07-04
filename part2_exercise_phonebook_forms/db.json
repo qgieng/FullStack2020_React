@@ -1,29 +1,24 @@
 {
   "persons": [
     {
-      "name": "Huy",
-      "number": "123-4123-123",
-      "id": 2
-    },
-    {
-      "name": "Macy",
-      "number": "626-123123-23",
-      "id": 3
-    },
-    {
-      "name": "Blade",
-      "number": "33-333-666-6",
-      "id": 4
-    },
-    {
       "name": "Mardy",
       "number": "123-123-123",
       "id": 5
     },
     {
       "name": "John",
-      "number": "456",
+      "number": "123-12312-123",
       "id": 6
+    },
+    {
+      "name": "Localhost",
+      "number": "198-231-2312",
+      "id": 7
+    },
+    {
+      "name": "Joy ",
+      "number": "123-12312-123",
+      "id": 8
     }
   ]
 }

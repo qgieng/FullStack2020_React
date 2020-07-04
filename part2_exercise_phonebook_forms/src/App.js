@@ -1,6 +1,7 @@
 import React, { useState ,useEffect} from 'react'
 import LoadNames from './components/LoadNames'
 import contactService from './services/contacts'
+import Notification from './components/Notification'
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -8,10 +9,10 @@ const App = () => {
     const [ newName, setNewName ] = useState('');
     const [ newNumber, setNewNumber ] = useState('');
     const [ filter, setNewFilter ] = useState('');
+    const [notification, setNewNotification] = useState(null); 
 
     const handleNameChange= (event)=>{setNewName(event.target.value);
     }
-
     const handleNumberChange= (event)=>{setNewNumber(event.target.value);
     }
     const handleFilterChange= (event)=>{setNewFilter(event.target.value);
@@ -25,7 +26,7 @@ const App = () => {
             name: newName,
             number: newNumber
         }
-        
+        //change if add/update contact.
         if(found!== null && found !== undefined){
             const confirmation = window.confirm(`${newName} is already added to phonebook \n Would you like to replace the old number with a new one?`);
             if(confirmation){
@@ -33,7 +34,16 @@ const App = () => {
                     .then(returnedContact=>{
                         console.log('updated contacts', returnedContact);
                         setPersons(persons.map(person=> person.id !== found.id? person: returnedContact));
+                        setNewNotification(`Changed number of ${found.name}`);
+
                     })
+                    .catch(error=>{
+                        setNewNotification(`Information for ${newName} has already been remove from server`);
+                        //console.log(error);
+                        setPersons(persons.filter(person=> person.id !== found.id));
+
+                    }
+                    )
                 setNewName('');
                 setNewNumber('');
             }
@@ -42,6 +52,7 @@ const App = () => {
         contactService.create(addedName)
             .then(returnedName=>
                 setPersons(persons.concat(returnedName)));
+        setNewNotification(`Added ${addedName.name}`)
         setNewName('');
         setNewNumber('');
     };
@@ -50,7 +61,9 @@ const App = () => {
         const result = window.confirm(`Delete ${name.name}?`);
         if(result){
             contactService.deleteContact(name.id);
-            setPersons(persons.filter(p => p.id !==name.id));}  
+            setPersons(persons.filter(p => p.id !==name.id)); 
+            setNewNotification(`Delete ${name.name}`) 
+        }
     };
 
 
@@ -70,6 +83,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={notification}/>
             <div>
                 <p>filter shown with
                     <input 
