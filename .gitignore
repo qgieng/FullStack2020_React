@@ -11,6 +11,7 @@
 # production
 /build
 /part3_Phonebook
+/part3
 # misc
 .env
 .DS_Store
