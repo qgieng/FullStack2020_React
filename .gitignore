@@ -12,6 +12,7 @@
 /build
 /part3_Phonebook
 /part3
+/Exercises
 # misc
 .env
 .DS_Store
