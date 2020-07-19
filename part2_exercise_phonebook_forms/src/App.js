@@ -37,22 +37,21 @@ const App = () => {
                         setNewNotification(`Changed number of ${found.name}`);
 
                     })
-                    .catch(error=>{
-                        setNewNotification(`Information for ${newName} has already been remove from server`);
-                        //console.log(error);
-                        setPersons(persons.filter(person=> person.id !== found.id));
-
-                    }
-                    )
                 setNewName('');
                 setNewNumber('');
             }
             return;
         }
         contactService.create(addedName)
-            .then(returnedName=>
-                setPersons(persons.concat(returnedName)));
-        setNewNotification(`Added ${addedName.name}`)
+            .then(returnedName=>{
+                setPersons(persons.concat(returnedName));
+                setNewNotification(`Added ${addedName.name}`);
+            })
+            .catch(error=>{
+                //console.log('error printed here', error.response.data.error);
+                setNewNotification(error.response.data.error);
+            });
+        
         setNewName('');
         setNewNumber('');
     };
