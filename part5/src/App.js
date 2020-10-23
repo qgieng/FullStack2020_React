@@ -6,6 +6,7 @@ import noteService from './services/notes'
 import loginService from './services/login'
 
 const App = () => {
+
   const [notes, setNotes] = useState([]) 
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
@@ -64,6 +65,8 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
+      //user will come back with a token after login.
+      noteService.setToken(user.token);
       setUser(user);
       setUsername('');
       setPassword('');
@@ -83,11 +86,8 @@ const App = () => {
     ? notes
     : notes.filter(note => note.important)
 
-  return (
-    <div>
-      <h1>Notes</h1>
-      <Notification message={errorMessage} />
 
+    const loginForm = () => (
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -108,8 +108,34 @@ const App = () => {
           />
         </div>
         <button type="submit">login</button>
-      </form>
-      
+      </form>      
+    )
+
+    const noteForm = () => (
+      <form onSubmit={addNote}>
+        <input
+          value={newNote}
+          onChange={handleNoteChange}
+        />
+        <button type="submit">save</button>
+      </form>  
+    )
+
+    
+  return (
+    <div>
+      <h1>Notes</h1>
+      <Notification message={errorMessage} />
+
+      {user===null?  
+        loginForm():
+        <div>
+          <p>{user.name} logged-in</p>
+          {noteForm()}
+          </div> 
+        }
+    
+        <h2>Notes</h2>
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
@@ -124,13 +150,7 @@ const App = () => {
           />
         )}
       </ul>
-      <form onSubmit={addNote}>
-        <input
-          value={newNote}
-          onChange={handleNoteChange}
-        />
-        <button type="submit">save</button>
-      </form>
+      
       <Footer />
     </div>
   )
