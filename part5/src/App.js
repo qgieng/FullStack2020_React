@@ -23,6 +23,16 @@ const App = () => {
       })
   }, [])
 
+  //the empty array as the parameter of the effect ensurs that the effect is executed only when the compnent is rendered for the first time.
+  useEffect(()=>{
+    const LoggedUserJson = window.localStorage.getItem('loggedNoteappUser');
+    if(LoggedUserJson){
+      const user = JSON.parse(LoggedUserJson)
+      setUser(user);
+      noteService.setToken(user.token);
+    }
+  }, [])
+
   const addNote = (event) => {
     event.preventDefault()
     const noteObject = {
@@ -65,7 +75,13 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
-      //user will come back with a token after login.
+
+      window.localStorage.setItem(
+                'loggedNoteappUser', JSON.stringify(user)
+                      
+      ) 
+
+      //user will come back with a token after login.w
       noteService.setToken(user.token);
       setUser(user);
       setUsername('');
