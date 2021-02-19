@@ -24,3 +24,18 @@ const Togglable = (props) => {
 }
 
 export default Togglable
+
+
+
+/**
+ *  Use case.
+ * <Togglable buttonLabel='login'>
+  <LoginForm
+    username={username}
+    password={password}
+    handleUsernameChange={({ target }) => setUsername(target.value)}
+    handlePasswordChange={({ target }) => setPassword(target.value)}
+    handleSubmit={handleLogin}
+  />
+</Togglable>
+ */
